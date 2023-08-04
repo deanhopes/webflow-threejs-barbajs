@@ -10,6 +10,11 @@
     "estree-walker" "^2.0.1"
     "picomatch" "^2.2.2"
 
+"@splidejs/splide@^4.1.4":
+  "integrity" "sha512-5I30evTJcAJQXt6vJ26g2xEkG+l1nXcpEw4xpKh0/FWQ8ozmAeTbtniVtVmz2sH1Es3vgfC4SS8B2X4o5JMptA=="
+  "resolved" "https://registry.npmjs.org/@splidejs/splide/-/splide-4.1.4.tgz"
+  "version" "4.1.4"
+
 "@studio-freight/lenis@^1.0.19":
   "integrity" "sha512-0DZdjDaJqhYVxzcbj6Dpv/BHS/RLc4f6XYu/n0t0fUKatuvO5vtXW4gW4GHgJPiPIpamct7bg8hpihbjZ6fqpw=="
   "resolved" "https://registry.npmjs.org/@studio-freight/lenis/-/lenis-1.0.19.tgz"
