@@ -1,12 +1,24 @@
 import './styles/style.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Lenis from '@studio-freight/lenis'
 import SplitType from 'split-type'
 import Splide from '@splidejs/splide';
 import '@splidejs/splide/css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Install Lenis
+const lenis = new Lenis()
+
+// Sync GSAP with Lenis
+lenis.on('scroll', ScrollTrigger.update)
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000)
+})
+gsap.ticker.lagSmoothing(0)
+
+// Install SplitType
 let typeSplit = new SplitType('.split-text', {
     types: 'words',
     tagName: 'span'
@@ -35,25 +47,39 @@ const tl = gsap.timeline({
 
 
 var splide = new Splide('.splide', {
-    fixedWidth: '40vw',
-    fixedHeight: '40vw',
+    fixedWidth: '30vw',
     gap: '1rem',
-    rewind: true,
-    rewindByDrag: true,
-    perMove: 2,
-    autoplay: true,
-    interval: 3000,
-    easing: 'cubic-bezier(.42,.65,.27,.99)',
+    // snap: true,
+    easing: 'ease-in-out',
     drag: true,
+    arrows: false,
     pagination: false,
-    infinite: true,
-});
-
-var bar = splide.root.querySelector('.carousel-progress-bar');
-splide.on('mounted move', function () {
-    var end = splide.Components.Controller.getEnd() - 1;
-    var rate = Math.min((splide.index) / end, 1);
-    bar.style.width = String(rate * 100) + '%';
+    // infinite: true,
 });
 
 splide.mount()
+
+// Set up ScrollTrigger
+const scrollTrigger = ScrollTrigger.create({
+    trigger: '.page-wrapper', // Change '.splide' to the class/id of the element you want to use as the trigger
+    start: 'top top',
+    end: '+=15% +=50%',
+    markers: true,
+    scrub: 40, // Adjust for smoothness, 0 is instant, higher values make it smoother
+    onUpdate: (self) => {
+        const progress = self.progress;
+        const slideCount = splide.length - 1;
+        const currentSlide = Math.round(progress * slideCount);
+        if (splide.index !== currentSlide) {
+            splide.go(currentSlide);
+        }
+    }
+});
+
+// Add moved event listener to Splide
+splide.on('moved', (newIndex) => {
+    // Calculate new progress
+    const newProgress = newIndex / (splide.length - 1);
+    //Manually update ScrollTrigger's progress
+    ScrollTrigger.scrollerProxy(newProgress * scrollTrigger.end);
+});
